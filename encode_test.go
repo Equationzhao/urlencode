@@ -56,17 +56,23 @@ func TestEncode(t *testing.T) {
 func TestExample(t *testing.T) {
 	// encode struct
 	type User struct {
-		Name string    `urlencoded:"name,omitempty"`
-		Age  int       `urlencoded:"age,omitempty"`
-		Born time.Time `urlencoded:"born,omitempty" time_format:"20060102"`
+		Valid bool          `urlencoded:"valid"`
+		Name  string        `urlencoded:"name,omitempty"`
+		Age   int           `urlencoded:"age,omitempty"`
+		Born  time.Time     `urlencoded:"born,omitempty" time_format:"20060102"`
+		Since time.Duration `urlencoded:"since,omitempty" time_duration_format:"d"`
 	}
 	user := User{
-		Name: "equation",
-		Age:  18,
-		Born: time.Date(2002, 5, 31, 0, 0, 0, 0, time.Local),
+		Valid: false,
+		Name:  "equation",
+		Age:   18,
+		Born:  time.Date(2002, 5, 31, 0, 0, 0, 0, time.Local),
 	}
+
+	user.Since = time.Since(user.Born)
+
 	fmt.Println(Convert2Urlencoded(user))
-	// output: name=equation&age=18&born=20020531
+	// output: valid=false&name=equation&age=18&born=20020531&since=7668.446190d
 
 	// encode map
 	m := map[string]any{
